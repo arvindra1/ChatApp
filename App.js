@@ -3,7 +3,6 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import ChatScreen from './screens/ChatScreen';
 import UsersScreen from './screens/UsersScreen';
-import Splash from './screens/Splash';
 import { UserProvider } from './user/UserContext';
 import Auth from './Navigate/Auth';
 import SettingsScreen from './screens/Setting';
@@ -39,7 +38,7 @@ function App() {
           {props => <UsersScreen {...props} onLogOut={handleLogout} />}
           </Stack.Screen>
           <Stack.Screen options={{ headerShown: false }} name='Chat' component={ChatScreen} />
-          <Stack.Screen options={{ headerShown: false }} name='Setting' component={SettingsScreen} />
+          <Stack.Screen  name='Setting' component={SettingsScreen} />
         </Stack.Navigator>):(<Auth onLogin={handleLogin}  />)}
 
       </NavigationContainer>

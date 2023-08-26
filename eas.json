@@ -1,0 +1,14 @@
+{
+ 
+  "build": {
+   "preview": {
+      "android": {
+        "gradleCommand": ":app:assembleRelease"
+      }
+    },
+    "production": {}
+  },
+  "submit": {
+    "production": {}
+  }
+}

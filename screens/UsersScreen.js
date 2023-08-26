@@ -3,9 +3,9 @@ import { StyleSheet, Text, View, ScrollView, Pressable } from 'react-native';
 import Users from '../components/Users';
 import { StatusBar } from 'expo-status-bar';
 import { Icon } from '@rneui/base';
+import { Menu } from 'native-base';
 import { auth, db } from '../Firebase/firebase';
 import { collection, getDocs } from 'firebase/firestore';
-import { Menu, Modal, Button, FormControl, Input } from 'native-base';
 import { useUserContext } from '../user/UserContext';
 import { signOut } from 'firebase/auth';
 import { useNavigation } from '@react-navigation/native';
@@ -55,11 +55,10 @@ function UsersScreen({ onLogOut }) {
                 <Icon name='menu' type='material' color='white' />
               </Pressable>;
             }}>
-              <Menu.Item>Arial</Menu.Item>
-              <Menu.Item>Nunito Sans</Menu.Item>
-              <Menu.Item>Roboto</Menu.Item>
-              <Menu.Item>Poppins</Menu.Item>
-              <Menu.Item onPress={()=>navigation.navigate('Setting')}>Setting</Menu.Item>
+             
+              <Menu.Item>New group</Menu.Item>
+              <Menu.Item>New update</Menu.Item>
+              <Menu.Item onPress={()=>navigation.navigate('Setting')}>Settings</Menu.Item>
               <Menu.Item onPress={handleLogOut}>Log Out</Menu.Item>
             </Menu>
           </View>
@@ -68,8 +67,8 @@ function UsersScreen({ onLogOut }) {
 
         </View>
         <ScrollView>
-          {users.map((item, index) => {
-            return <Users key={index} user={item} />
+          {users.map((item) => {
+            return <Users key={item.id} user={item} />
           })}
         </ScrollView>
       

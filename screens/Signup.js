@@ -6,9 +6,11 @@ import { createUserWithEmailAndPassword } from 'firebase/auth'
 import { auth } from '../Firebase/firebase';
 import { setDoc ,doc} from 'firebase/firestore';
 import { db } from '../Firebase/firebase';
+import { Icon, } from '@rneui/themed';
 
 function Signup() {
     const navigation = useNavigation();
+    const [profileImage, setProfileImage]= useState(null);
 
     const [email, setEmail] = useState('');
     const [name, setName] = useState('');
@@ -25,6 +27,11 @@ function Signup() {
                     name:name,
                     email:email,
                     _id:userCredential.user.uid,
+                    profileImage:profileImage,
+
+                   });
+                   await setDoc(doc(db, "message", userCredential.user.uid), {
+                    istyping: true,
                    });
                 Alert.alert('User registration done');
                 navigation.goBack();
@@ -41,9 +48,14 @@ function Signup() {
             <StatusBar style='light' />
             <View style={styles.loginContainer}>
                 <Text style={styles.title}>Register</Text>
-
+                <Avatar mb={6} bg="purple.600" alignSelf="center" size="2xl" 
+      source={{uri:profileImage}}>
+        A
+        <Avatar.Badge bg="trueGray.100">
+          <Icon name="camera" type="antdesign" color="blue" />
+        </Avatar.Badge>
+      </Avatar>
                 <View style={styles.inputContainer}>
-                    <Text style={styles.inputLabel}>First Name</Text>
                     <TextInput
                         style={styles.inputField}
                         value={name}
@@ -53,7 +65,6 @@ function Signup() {
                 </View>
 
                 <View style={styles.inputContainer}>
-                    <Text style={styles.inputLabel}>Email</Text>
                     <TextInput
                         style={styles.inputField}
                         value={email}
@@ -64,7 +75,6 @@ function Signup() {
                 </View>
 
                 <View style={styles.inputContainer}>
-                    <Text style={styles.inputLabel}>Password</Text>
                     <TextInput
                         style={styles.inputField}
                         value={password}
@@ -78,6 +88,7 @@ function Signup() {
                     style={styles.registerButton}
                     onPress={handleRegister}
                     disabled={isLoading} // Disable the button while loading
+                    className="mt-8"
                 >
                    
                  

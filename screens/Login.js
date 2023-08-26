@@ -4,18 +4,19 @@ import React, { useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { Text, View, TextInput, TouchableOpacity, Image } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { signInWithEmailAndPassword } from 'firebase/auth'
+import { signInWithEmailAndPassword ,sendPasswordResetEmail} from 'firebase/auth'
 import { auth } from '../Firebase/firebase';
 import { db } from '../Firebase/firebase';
 import { collection, getDocs, where, query } from 'firebase/firestore';
 import { useUserContext } from '../user/UserContext';
 
 
-function Loginscreen({ onLog }) {
+function Login({ onLog }) {
   const { setSender } = useUserContext();
   const navigation = useNavigation();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [resetSent, setResetSent] = useState(false);
 
   const handleLogin = async () => {
 
@@ -30,13 +31,14 @@ function Loginscreen({ onLog }) {
         const userCredential = await signInWithEmailAndPassword(auth, email, password);
         const userQuery = query(collection(db, 'users'), where('_id', '==', userCredential.user.uid));
         const querySnapshot = await getDocs(userQuery);
-    
+
         if (!querySnapshot.empty) {
           const loggedInUser = { id: querySnapshot.docs[0].id, ...querySnapshot.docs[0].data() };
-        setSender(loggedInUser);
-       // Set userUUID in the context\
+          setSender(loggedInUser);
+          // Set userUUID in the context\
 
-       console.log('User Details:', loggedInUser);}
+          console.log('User Details:', loggedInUser);
+        }
         console.log('User logged in:', userCredential.user);
         // Notify the parent component about successful login
         onLog();
@@ -44,10 +46,15 @@ function Loginscreen({ onLog }) {
         console.error('Error logging in:', error.message);
       }
     }
+  };const handleResetPassword = async () => {
+    try {
+      await sendPasswordResetEmail(email,auth);
+      setResetSent(true);
+    } catch (error) {
+      console.log('Error sending reset email:', error);
+    }
   };
-  // const handleSignup = () => {
-  //   onsignup();
-  // };
+  
 
   return (
     <View style={{ flex: 1, flexDirection: 'column' }}>
@@ -85,8 +92,9 @@ function Loginscreen({ onLog }) {
             onChangeText={(value) => setPassword(value)}
             secureTextEntry // Set the password state correctly
           />
-          <Text style={{ marginLeft: 190, marginTop: 7 }}>Forgot password?</Text>
+          <TouchableOpacity onPress={handleResetPassword}><Text style={{ marginLeft: 190, marginTop: 7 }}>Forgot password?</Text></TouchableOpacity>
         </View>
+        {resetSent && <Text>Password reset email sent.</Text>}
 
         {/* Login Button */}
         <View style={{ marginTop: 47, justifyContent: 'center', alignItems: 'center' }}>
@@ -149,4 +157,4 @@ function Loginscreen({ onLog }) {
   );
 }
 
-export default Loginscreen;
+export default Login;

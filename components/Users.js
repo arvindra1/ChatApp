@@ -6,7 +6,7 @@ import { useNavigation } from '@react-navigation/native';
 
 
 function Users({user}) {
-    const avatarSource = user.img ? { uri: user.img } : null;
+    const avatarSource = user.profileImage ? { uri: user.profileImage } : null;
     const navigation = useNavigation();
     
     const first = user.name ? user.name[0].toUpperCase() : '';
